@@ -6,9 +6,97 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link href="./style.css" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
+
+        <!-- List des patients -->
+        <div id="patientContent">
+            <p class="h2" id="patientTitle">Liste des patients</p>
+           
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <ul class="list-group" id="patientList">
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="text-center">Informations personnelles</h6>
+                        </div>
+                        <div class="card-body">
+                            
+                            <ul class="list-unstyled mt-3 mb-4 text-center" id="personnalInformations">
+                                <li id="patientName">Nom :</li>
+                                <li id="patientBirthday">Naissance :</li>
+                                <li id="patientGender">Genre :</li>
+                                <li id="patientMarried">Situation matrioniale</li>
+                            </ul>
+
+                            <div id="personnalInformationsInput" hidden="true">
+                                <input type="text" class="form-control"/>
+                                <input type="text" class="form-control"/>
+                                <input type="text" class="form-control"/>
+                                <input type="text" class="form-control"/>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="text-center">Adresse</h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mt-3 mb-4 text-center">
+                                <li id="patientCity">Ville :</li>
+                                <li id="patientStreet">Rue :</li>
+                                <li id="patientZipCode">Code postal :</li>
+                                <li id="patientState">Etat :</li>
+                                <li id="patientCountry">Pays :</li>
+                                <li id="patientAdress">Type d'adresse :</li>
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="text-center">Contact</h6>
+                        </div>
+                        <div class="card-body">
+                            
+                            <ul class="list-unstyled mt-3 mb-4 text-center">
+                                <li id="patientSystem">Systeme :</li>
+                                <li id="patientValue">Valeur :</li>
+                                <li id="patientUsage">Usage :</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-between">
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-primary " id="peviousButton">Precedent</button>
+                     <button type="button" class="btn btn-primary" id="nextButton">Suivant</button>
+                </div>
+
+                <div>
+                    <button type="button" class="btn btn-danger " id="deleteButton">Supprimer</button>
+                     <button type="button" class="btn btn-warning" id="updateButton">Modifier</button>
+                </div>
+            </div>
+
+            
+
+
+        </div>
+       
+
+        <script type="text/javascript"  src="./script.js"></script>
     </body>
 </html>

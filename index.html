@@ -11,11 +11,126 @@
     </head>
     <body>
 
+        <!-- Formulaire de creation d'un patient  -->
+        <div id="createPatientSection" style="display: none">
+            <h1>Creer un patient</h1>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Nom : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-3">
+                    <h4>Date de naissance : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="date">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Ville : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Rue : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Code postal : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Etat : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Pays : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-3">
+                    <h4>Type d'adresse : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <select name="gender" id="adressTypeDropdown">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-3">
+                    <h4>Genre : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <select name="gender" id="genderDropdown">
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <h4>Numéro : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-3">
+                    <h4>Système : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <select name="gender" id="telecomSystemDropdown">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-3">
+                    <h4>Type d'usage : </h4>
+                </div>
+                <div class="col-sm-6">
+                    <select name="gender" id="telecomUsageDropdown">
+                    </select>
+                </div>
+            </div>
+
+
+            <button type="button" class="btn btn-success" id="backToPatientListButton">liste des patients</button>
+            <button type="button" class="btn btn-success" id="createPatientButton">Créer le patient</button>
+        </div>
+
+        
+
         <!-- List des patients -->
         <div id="patientContent">
             <p class="h2" id="patientTitle">Liste des patients</p>
-           
-
+            <button type="button" class="btn btn-success" id="goToPatientFormButton">Créer un patient</button>
             <div class="row">
                 <div class="col-sm-3">
                     <ul class="list-group" id="patientList">

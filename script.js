@@ -1,9 +1,20 @@
 const URL_PATIENT = "http://test.fhir.org/r4/Patient"
 const UNKNOWN_VALUE = "Inconnu"
 
+// Patient form informations
+let genders = ["M", "F"]
+let matrimonialeSitation = ["célibataire", "mariée", "veuve", "divorcée"]
+let adressUse = ["home", "work"]
+let telecomUse = ["mobile"]
+let telecomSystem = ["phone"]
+
+
 let patients = [] 
 let patientsIndexToDisplay = 0 
 let currentPatientSelected = 0
+
+let createPatientSection = document.getElementById("createPatientSection")
+let patientListSection = document.getElementById("patientContent")
 
 let patientList = document.getElementById("patientList")
 let patientTitle = document.getElementById("patientTitle")
@@ -32,8 +43,23 @@ let nextButton = document.getElementById("nextButton")
 let deleteButton = document.getElementById("deleteButton")
 let updateButton = document.getElementById("updateButton")
 
+let goToPatientFormButton = document.getElementById("goToPatientFormButton")
+let createPatientButton = document.getElementById("createPatientButton")
+let backToPatientListButton = document.getElementById("backToPatientListButton")
 
-window.addEventListener("load", fetchPatients )
+// Input fields 
+let genderDropdown = document.getElementById("genderDropdown")
+let adressTypeDropdown = document.getElementById("adressTypeDropdown")
+let telecomSystemDropdown = document.getElementById("telecomSystemDropdown")
+let telecomUsageDropdown = document.getElementById("telecomUsageDropdown")
+
+
+window.addEventListener("load", () => {
+    fetchPatients()
+    populateSelect(genderDropdown, genders)
+    populateSelect(adressTypeDropdown, adressUse)
+    populateSelect(telecomSystemDropdown, telecomSystem)
+    populateSelect(telecomUsageDropdown, telecomUse) })
 
 previousButton.addEventListener("click", () => {
     onPreviousClicked()
@@ -46,6 +72,27 @@ deleteButton.addEventListener("click", () => {
     deletePatient()
 })
 
+goToPatientFormButton.addEventListener("click", () => {
+    patientListSection.style.display = 'none'
+    createPatientSection.style.display = 'block'
+})
+
+backToPatientListButton.addEventListener("click", () => {
+    patientListSection.style.display = 'block'
+    createPatientSection.style.display = 'none'
+})
+
+// remplies un menu deroulant a partir d'une liste
+function populateSelect(selectedId, values){
+
+    for(i = 0 ; i < values.length ; i++){
+        let option = document.createElement("option")
+        let text = document.createTextNode(values[i])
+        option.appendChild(text)
+        option.setAttribute("value", values[i])
+        selectedId.appendChild(option)
+    }
+}
 
 // Recuperes tous les patients via l'API REST
 function fetchPatients() {

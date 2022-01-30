@@ -52,6 +52,15 @@ let genderDropdown = document.getElementById("genderDropdown")
 let adressTypeDropdown = document.getElementById("adressTypeDropdown")
 let telecomSystemDropdown = document.getElementById("telecomSystemDropdown")
 let telecomUsageDropdown = document.getElementById("telecomUsageDropdown")
+let birthdatePicker = document.getElementById("birthDatePicker")
+let nameInputField = document.getElementById("inputFieldCreateName")
+let firtsNameInputField = document.getElementById("inputFieldCreateFirstName")
+let cityInputField = document.getElementById("inputFieldCreateCity")
+let streetInputField = document.getElementById("inputFieldCreateStreet")
+let zipcodeInputField = document.getElementById("inputFieldCreateZipcode")
+let stateInputField = document.getElementById("inputFieldCreateState")
+let countryInputField = document.getElementById("inputFieldCreateCountry")
+let phoneNumberInputField = document.getElementById("inputFieldCreatePhoneNumber")
 
 
 window.addEventListener("load", () => {
@@ -80,6 +89,10 @@ goToPatientFormButton.addEventListener("click", () => {
 backToPatientListButton.addEventListener("click", () => {
     patientListSection.style.display = 'block'
     createPatientSection.style.display = 'none'
+})
+
+createPatientButton.addEventListener("click", () => {
+    createPatient()
 })
 
 // remplies un menu deroulant a partir d'une liste
@@ -128,6 +141,22 @@ function deletePatient(){
 // UPDATE PATIENT
 function updatePatient(){
 
+}
+
+function createPatient(){
+    let name = nameInputField.value
+    let firstName = firtsNameInputField.value
+    let birthdate = birthdatePicker.value
+    let city = cityInputField.value
+    let street = streetInputField.value
+    let zipCode = zipcodeInputField.value
+    let state = stateInputField.value
+    let country = countryInputField.value
+    let adressType = adressTypeDropdown.value
+    let gender = genderDropdown.value
+    let numberPhone = phoneNumberInputField.value
+    let telecomSystemType = telecomSystemDropdown.value
+    let telecomUsage = telecomUsageDropdown.value
 }
 
 

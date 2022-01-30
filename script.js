@@ -157,6 +157,22 @@ function createPatient(){
     let numberPhone = phoneNumberInputField.value
     let telecomSystemType = telecomSystemDropdown.value
     let telecomUsage = telecomUsageDropdown.value
+
+    let json = {
+        "resourceType" : "Patient",
+        "meta" : {},
+        "text" : {},
+        "identifier": [],
+        "name": [],
+        "telecom" : [],
+        "gender" : "",
+        "birthDate" : birthdate,
+        "address" : [],
+        "maritalStatus" : {}
+    }
+
+
+    console.log(json)
 }
 
 

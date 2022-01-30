@@ -2,11 +2,14 @@ const URL_PATIENT = "http://test.fhir.org/r4/Patient"
 const UNKNOWN_VALUE = "Inconnu"
 
 // Patient form informations
-let genders = ["M", "F"]
-let matrimonialeSitation = ["célibataire", "mariée", "veuve", "divorcée"]
+let genders = ["male", "female"]
+let matrimonialeSituation = ["célibataire", "mariée", "veuve", "divorcée"]
 let adressUse = ["home", "work"]
 let telecomUse = ["mobile"]
 let telecomSystem = ["phone"]
+
+let nameUse = ["usual", "official", "temp", "nickname", "anonymous" ,"old",  "maiden"]
+let namePrefix = ["Mr", "Ms"]
 
 
 let patients = [] 
@@ -52,6 +55,10 @@ let genderDropdown = document.getElementById("genderDropdown")
 let adressTypeDropdown = document.getElementById("adressTypeDropdown")
 let telecomSystemDropdown = document.getElementById("telecomSystemDropdown")
 let telecomUsageDropdown = document.getElementById("telecomUsageDropdown")
+let nameUsageDropdown = document.getElementById("nameUsageDropdown")
+let denominationDropdown = document.getElementById("denominationDropdown")
+let maritalStatusDropdown = document.getElementById("maritalStatusDropdown")
+
 let birthdatePicker = document.getElementById("birthDatePicker")
 let nameInputField = document.getElementById("inputFieldCreateName")
 let firtsNameInputField = document.getElementById("inputFieldCreateFirstName")
@@ -68,7 +75,11 @@ window.addEventListener("load", () => {
     populateSelect(genderDropdown, genders)
     populateSelect(adressTypeDropdown, adressUse)
     populateSelect(telecomSystemDropdown, telecomSystem)
-    populateSelect(telecomUsageDropdown, telecomUse) })
+    populateSelect(telecomUsageDropdown, telecomUse)
+    populateSelect(nameUsageDropdown, nameUse)
+    populateSelect(denominationDropdown, namePrefix)
+    populateSelect(maritalStatusDropdown, matrimonialeSituation)
+})
 
 previousButton.addEventListener("click", () => {
     onPreviousClicked()
@@ -146,6 +157,10 @@ function updatePatient(){
 function createPatient(){
     let name = nameInputField.value
     let firstName = firtsNameInputField.value
+    let nameUse = nameUsageDropdown.value
+    let maritalStatus = maritalStatusDropdown.value
+    let nameDenomination = denominationDropdown.value
+
     let birthdate = birthdatePicker.value
     let city = cityInputField.value
     let street = streetInputField.value
@@ -163,16 +178,58 @@ function createPatient(){
         "meta" : {},
         "text" : {},
         "identifier": [],
-        "name": [],
-        "telecom" : [],
-        "gender" : "",
+        "name": [
+            {
+                "use": nameUse,
+                "text": name + " " + firstName,
+                "family": name,
+                "given": [],
+                "prefix": [
+                    nameDenomination
+                ]
+            }
+        ],
+        "telecom" : [
+            {
+                "system" : telecomSystemType,
+                "value": numberPhone,
+                "use" : telecomUsage
+            }
+        ],
+        "gender" : gender,
         "birthDate" : birthdate,
-        "address" : [],
-        "maritalStatus" : {}
+        "address" : [
+            {
+                "use" : adressType,
+                "line" : [
+                    street
+                ],
+                "city": city,
+                "state" : state,
+                "postalCode" : zipCode,
+                "country" : country
+            }
+        ],
+        "maritalStatus" : {
+            "coding" : {
+                "system" : "",
+                "code" : "",
+                "display" : maritalStatus
+            }
+        }
     }
 
 
-    console.log(json)
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+        }
+    };    
+    xhttp.open("PUT", URL_PATIENT, true);
+    xhttp.setRequestHeader("Accept","application/fhir+json")
+    xhttp.setRequestHeader("Content-Type","application/fhir+json")
+    xhttp.send(JSON.stringify(json));
 }
 
 

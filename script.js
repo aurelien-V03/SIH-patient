@@ -1,17 +1,16 @@
 const URL_PATIENT = "http://test.fhir.org/r4/Patient"
-const UNKNOWN_VALUE = "Inconnu"
+const EMPTY_VALUE = ""
 const UPDATE_PATIENT_TITLE = "Mettre à jour le patient"
 const CREATE_PATIENT_TITLE = "Créer le patient"
+
 
 // Patient form informations
 let genders = ["male", "female", "other", "unknown"]
 let matrimonialeSituation = [{code : "M", display: "Married"}, {code : "D", display: "Divorced"},  {code : "A", display: "Annuled"},  {code : "U", display: "unmarried"},  {code : "S", display: "Never Married"}]
 let adressUse = ["home", "work"]
 let adressType = ["postal" , "physical", "both"]
-
 let telecomUse = ["home", "work", "temp", "old", "mobile"]
 let telecomSystem = ["phone", "fax", "email", "pager", "url", "sms", "other"]
-
 let nameUse = ["usual", "official", "temp", "nickname", "anonymous" ,"old",  "maiden"]
 let namePrefix = ["Mr", "Mrs", "Miss", "Ms"]
 
@@ -119,7 +118,12 @@ createPatientButton.addEventListener("click", () => {
 })
 
 updateButton.addEventListener("click", () => {
+    resetPatientFields()
     displayUpdatePatientForm()
+})
+
+savePatientButton.addEventListener("click", () => {
+    updatePatient()
 })
 
 // remplies un menu deroulant a partir d'une liste
@@ -167,11 +171,12 @@ function deletePatient(){
 
 // UPDATE PATIENT
 function updatePatient(){
+    let newName = nameInputField.value
 
 }
 
 function displayUpdatePatientForm(){
-
+    resetPatientFields()
     titlePatientForm.textContent = UPDATE_PATIENT_TITLE
 
     patientListSection.style.display = 'none'
@@ -179,23 +184,147 @@ function displayUpdatePatientForm(){
     createPatientButton.style.display = 'none'
     savePatientButton.style.display = 'block'
 
-    let patientToUpdate = patients[currentPatientSelected]
+    let patientToUpdate = patients[currentPatientSelected].resource
 
-    nameInputField.value = patientToUpdate.resource.name[0].family
-    firtsNameInputField.value = patientToUpdate.resource.name[0].given[0]
-    //.value = patientToUpdate.resource.name[0].prefix[0]
+    let nameToUpdate = patientToUpdate.name != undefined ?  patientToUpdate.name[0] : null
+    let birthDateToUpdate = patientToUpdate.birthDate != undefined ? patientToUpdate.birthDate : null
+    let addressToUpdate = patientToUpdate.address != undefined ? patientToUpdate.address[0] : null
+    let telecomToUpdate = patientToUpdate.telecom != undefined ? patientToUpdate.telecom[0] : null
+    let genderToUpdate = patientToUpdate.gender != undefined ? patientToUpdate.gender : ""
+    let maritalSituation = patientToUpdate.maritalStatus != undefined ?  patientToUpdate.maritalStatus.coding.display : ""
 
-    denominationDropdown.value = patientToUpdate.resource.name[0].prefix[0]
-    genderDropdown.value = patientToUpdate.resource.gender
+    if(nameToUpdate != null){
+        nameInputField.value = nameToUpdate.family
+        let nameUse = nameToUpdate.use != undefined ? nameToUpdate.use : ""
+        let prefix = nameToUpdate.given[0]
+        nameUsageDropdown.value = nameUse
+        denominationDropdown.value = prefix
+    }
+    if(birthDateToUpdate){
+        birthdatePicker.value = birthDateToUpdate
+    }
+    if(addressToUpdate != null){
+        let cityToUpdate = addressToUpdate.city != undefined ?  addressToUpdate.city : ""
+        let streetToUpdate = addressToUpdate.line[0] != undefined ?  addressToUpdate.line[0] : ""
+        let zipcodeToUpdate = addressToUpdate.postalCode != undefined ?  addressToUpdate.postalCode : ""
+        let stateToUpdate = addressToUpdate.state != undefined ?  addressToUpdate.state : ""
+        let countryToUpdate = addressToUpdate.country != undefined ?  addressToUpdate.country : ""
+        let useToUpdate = addressToUpdate.use != undefined ? addressToUpdate.use : ""
+        let typeToUpdate = addressToUpdate.type != undefined ? addressToUpdate.type : ""
+
+        
+        cityInputField.value = cityToUpdate
+        streetInputField.value = streetToUpdate
+        zipcodeInputField.value = zipcodeToUpdate
+        stateInputField.value = stateToUpdate
+        countryInputField.value = countryToUpdate
+        adressUsageDropdown.value = useToUpdate
+        adressTypeDropdown.value = typeToUpdate
+        
+
+    }
+    if(telecomToUpdate != null){
+        let phoneNumber = telecomToUpdate.value != undefined ? telecomToUpdate.value : ""
+        let telecomSystemm = telecomToUpdate.system != undefined ? telecomToUpdate.system : ""
+        let telecomUse = telecomToUpdate.use != undefined ? telecomToUpdate.use : ""
+
+        phoneNumberInputField.value = phoneNumber
+        telecomSystemDropdown.value = telecomSystemm
+        telecomUsageDropdown.value = telecomUse
+    }
+
+    genderDropdown.value = genderToUpdate
+    maritalStatusDropdown.value = maritalSituation
+}
+
+function updatePatient(){
+    console.log(patients[currentPatientSelected])
+
+    let newName = nameInputField.value
+    let newNameUsage = nameUsageDropdown.value
+    let newMatrimonialSituation = maritalStatusDropdown.value
+    let newPrefix = denominationDropdown.value
+    let newBirthDate = birthDate.value
+    let newCity = cityInputField.value
+    let newStreet = streetInputField.value
+    let newZipcode = zipcodeInputField.value
+    let newState = stateInputField.value
+    let newCountry = countryInputField.value
+    let newAdressUse = adressUsageDropdown.value
+    let newAdressType = adressTypeDropdown.valu
+    let newGender = genderDropdown.value
+
+    let newPhoneNumber = phoneNumberInputField.value
+    let newTelecomSystem = telecomSystemDropdown.value
+    let newTelecomUse = telecomUsageDropdown.value
+
+    let newPatient = patients[currentPatient].resource
+
+    if(newPrefix != null){
+        newPatient.name[0].prefix[0] = newPrefix
+    }
+    if(newNameUsage != null){
+        newPatient.name[0].use = newNameUsage
+    }
+    if(newMatrimonialSituation != null){
+        newPatient.maritalStatus.coding[0].display = newMatrimonialSituation
+        newPatient.maritalStatus.coding[0].code =  matrimonialeSituation.find( x => x.display == newMatrimonialSituation) 
+    }
+
+    if(newCity != null){
+        newPatient.address[0].city = newCity
+    }
+    if(newStreet != null){
+        newPatient.address[0].line[0] = newStreet
+    }
+    if(newZipcode != null){
+        newPatient.address[0].postalCode = newZipcode
+    }
+    if(newState != null){
+        newPatient.address[0].state = newState
+    }
+    if(newCountry != null){
+        newPatient.address[0].country = newCountry
+    }
+    if(newAdressUse != null){
+        newPatient.address[0].use = newAdressUse
+    }
+    if(newAdressType != null){
+        newPatient.address[0].type = newAdressType
+    }
+
+    if(newName != ""){
+        newPatient.name[0].family = newName
+    }
+    if(newTelecomSystem != null){
+        newPatient.telecom[0].system = newTelecomSystem
+    }
+    if(newPhoneNumber != null){
+        newPatient.telecom[0].value = newPhoneNumber
+    }
+    if(newTelecomUse != null){
+        newPatient.telecom[0].use = newTelecomUse
+    }
+    if(newGender != ""){
+        newPatient.gender = newGender
+    }
+    if(newBirthDate != null){
+        newPatient.birthDate = newBirthDate
+    }
 
 
-    cityInputField.value = patientToUpdate.resource.address[0].city
-    streetInputField.value = patientToUpdate.resource.address[0].line[0]
-    zipcodeInputField.value = patientToUpdate.resource.address[0].postalCode
-    stateInputField.value = patientToUpdate.resource.address[0].state
-    countryInputField.value = patientToUpdate.resource.address[0].country
+    console.log(newPatient)
 
-
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("Le patient à été mis à jour")
+        }
+    };    
+    xhttp.open("PUT", URL_PATIENT, true);
+    xhttp.setRequestHeader("Accept","application/fhir+json")
+    xhttp.setRequestHeader("Content-Type","application/fhir+json")
+    xhttp.send(JSON.stringify(newPatient));
 }
 
 function createPatient(){
@@ -303,13 +432,9 @@ function updatePatientsList(newPatients) {
 
 
 function selectPatient(patientIndex){  
-
-    resetPatientFields()
-
     currentPatientSelected = patientIndex
     var currentPatient = patients[currentPatientSelected]
-    console.log(currentPatient)
- 
+ console.log(currentPatient)
    
     var selectedPatient = document.getElementsByClassName("list-group-item active")
     selectedPatient[0].className = "list-group-item"
@@ -324,34 +449,47 @@ function selectPatient(patientIndex){
     var maritalStatus = currentPatient.resource.maritalStatus != null ? currentPatient.resource.maritalStatus.coding[0].display : "inconnu"; 
     patientMarried.textContent = "Situation matrimoniale : " + maritalStatus
 
-    patientCity.textContent = "Ville : " + currentPatient.resource.address[0].city
-    patientStreet.textContent = "Rue : " + currentPatient.resource.address[0].line[0]
-    patientZipCode.textContent = "Code postal : " + currentPatient.resource.address[0].postalCode
-    patientState.textContent = "Etat : " + currentPatient.resource.address[0].state
-    patientCountry.textContent = "Pays : " + currentPatient.resource.address[0].country
-    patientAdress.textContent = "Type d'adresse : " + currentPatient.resource.address[0].use
-
-    patientSystem.textContent = "Système : " + currentPatient.resource.telecom[0].system
-    patientValue.textContent = "Valeur : " + currentPatient.resource.telecom[0].value
-    patientUsage.textContent = "Usage : " + currentPatient.resource.telecom[0].use
+    let address = currentPatient.resource.address != null ? currentPatient.resource.address : null
+    if(address != null){
+        patientCity.textContent = "Ville : " + currentPatient.resource.address[0].city
+        patientStreet.textContent = "Rue : " + currentPatient.resource.address[0].line[0]
+        patientZipCode.textContent = "Code postal : " + currentPatient.resource.address[0].postalCode
+        patientState.textContent = "Etat : " + currentPatient.resource.address[0].state
+        patientCountry.textContent = "Pays : " + currentPatient.resource.address[0].country
+        patientAdress.textContent = "Type d'adresse : " + currentPatient.resource.address[0].use
+    
+        patientSystem.textContent = "Système : " + currentPatient.resource.telecom[0].system
+        patientValue.textContent = "Valeur : " + currentPatient.resource.telecom[0].value
+        patientUsage.textContent = "Usage : " + currentPatient.resource.telecom[0].use
+    }
 }
 
 
 function resetPatientFields(){
-    patientName.textContent = "Nom : " + UNKNOWN_VALUE
-    patientBirthday.textContent = "Naissance : " +UNKNOWN_VALUE
-    patientGender.textContent = "Genre : " +UNKNOWN_VALUE
+    patientName.textContent = "Nom : " + EMPTY_VALUE
+    patientBirthday.textContent = "Naissance : " +EMPTY_VALUE
+    patientGender.textContent = "Genre : " +EMPTY_VALUE
 
-    patientCity.textContent = "Ville : " + UNKNOWN_VALUE
-    patientStreet.textContent = "Rue : " + UNKNOWN_VALUE
-    patientZipCode.textContent = "Code postal : " + UNKNOWN_VALUE
-    patientState.textContent = "Etat " +UNKNOWN_VALUE
-    patientCountry.textContent = "Pays : " +UNKNOWN_VALUE
-    patientAdress.textContent = "Type d'adresse : " +UNKNOWN_VALUE
+    nameUsageDropdown.value = null
+    maritalStatusDropdown.value = null
+    adressUsageDropdown.value = null
+    adressTypeDropdown.value = null
+    denominationDropdown.value = null
+    genderDropdown.value = null
+    telecomSystemDropdown.value = null
+    telecomUsageDropdown.value = null
 
-    patientSystem.textContent = "Système : " +UNKNOWN_VALUE
-    patientValue.textContent = "Valeur : " + UNKNOWN_VALUE
-    patientUsage.textContent = "Usage : " +UNKNOWN_VALUE
+
+    patientCity.textContent = "Ville : " + EMPTY_VALUE
+    patientStreet.textContent = "Rue : " + EMPTY_VALUE
+    patientZipCode.textContent = "Code postal : " + EMPTY_VALUE
+    patientState.textContent = "Etat " +EMPTY_VALUE
+    patientCountry.textContent = "Pays : " +EMPTY_VALUE
+    patientAdress.textContent = "Type d'adresse : " +EMPTY_VALUE
+
+    patientSystem.textContent = "Système : " +EMPTY_VALUE
+    patientValue.textContent = "Valeur : " + EMPTY_VALUE
+    patientUsage.textContent = "Usage : " +EMPTY_VALUE
 }
 
 function getPatientsSize(){
@@ -408,4 +546,3 @@ function onUpdate(){
     inputPersonnalInformations.hidden = false;
     personnalInformations.hidden = true;
 }
-

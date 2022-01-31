@@ -1,5 +1,7 @@
 const URL_PATIENT = "http://test.fhir.org/r4/Patient"
 const UNKNOWN_VALUE = "Inconnu"
+const UPDATE_PATIENT_TITLE = "Mettre à jour le patient"
+const CREATE_PATIENT_TITLE = "Créer le patient"
 
 // Patient form informations
 let genders = ["male", "female", "other", "unknown"]
@@ -47,12 +49,15 @@ let previousButton = document.getElementById("peviousButton")
 let nextButton = document.getElementById("nextButton")
 let deleteButton = document.getElementById("deleteButton")
 let updateButton = document.getElementById("updateButton")
+let savePatientButton = document.getElementById("savePatientButton")
 
 let goToPatientFormButton = document.getElementById("goToPatientFormButton")
 let createPatientButton = document.getElementById("createPatientButton")
 let backToPatientListButton = document.getElementById("backToPatientListButton")
 
 // Input fields 
+let titlePatientForm = document.getElementById("titlePatientForm")
+
 let genderDropdown = document.getElementById("genderDropdown")
 let adressTypeDropdown = document.getElementById("adressTypeDropdown")
 let adressUsageDropdown = document.getElementById("adressUsageDropdown")
@@ -99,6 +104,9 @@ deleteButton.addEventListener("click", () => {
 goToPatientFormButton.addEventListener("click", () => {
     patientListSection.style.display = 'none'
     createPatientSection.style.display = 'block'
+    titlePatientForm.textContent = CREATE_PATIENT_TITLE
+    createPatientButton.style.display = 'block'
+    savePatientButton.style.display = 'none'
 })
 
 backToPatientListButton.addEventListener("click", () => {
@@ -108,6 +116,10 @@ backToPatientListButton.addEventListener("click", () => {
 
 createPatientButton.addEventListener("click", () => {
     createPatient()
+})
+
+updateButton.addEventListener("click", () => {
+    displayUpdatePatientForm()
 })
 
 // remplies un menu deroulant a partir d'une liste
@@ -158,7 +170,36 @@ function updatePatient(){
 
 }
 
+function displayUpdatePatientForm(){
+
+    titlePatientForm.textContent = UPDATE_PATIENT_TITLE
+
+    patientListSection.style.display = 'none'
+    createPatientSection.style.display = 'block'
+    createPatientButton.style.display = 'none'
+    savePatientButton.style.display = 'block'
+
+    let patientToUpdate = patients[currentPatientSelected]
+
+    nameInputField.value = patientToUpdate.resource.name[0].family
+    firtsNameInputField.value = patientToUpdate.resource.name[0].given[0]
+    //.value = patientToUpdate.resource.name[0].prefix[0]
+
+    denominationDropdown.value = patientToUpdate.resource.name[0].prefix[0]
+    genderDropdown.value = patientToUpdate.resource.gender
+
+
+    cityInputField.value = patientToUpdate.resource.address[0].city
+    streetInputField.value = patientToUpdate.resource.address[0].line[0]
+    zipcodeInputField.value = patientToUpdate.resource.address[0].postalCode
+    stateInputField.value = patientToUpdate.resource.address[0].state
+    countryInputField.value = patientToUpdate.resource.address[0].country
+
+
+}
+
 function createPatient(){
+
     let name = nameInputField.value
     let firstName = firtsNameInputField.value
     let nameUse = nameUsageDropdown.value
@@ -267,6 +308,7 @@ function selectPatient(patientIndex){
 
     currentPatientSelected = patientIndex
     var currentPatient = patients[currentPatientSelected]
+    console.log(currentPatient)
  
    
     var selectedPatient = document.getElementsByClassName("list-group-item active")

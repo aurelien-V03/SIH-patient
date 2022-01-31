@@ -2,14 +2,16 @@ const URL_PATIENT = "http://test.fhir.org/r4/Patient"
 const UNKNOWN_VALUE = "Inconnu"
 
 // Patient form informations
-let genders = ["male", "female"]
-let matrimonialeSituation = ["célibataire", "mariée", "veuve", "divorcée"]
+let genders = ["male", "female", "other", "unknown"]
+let matrimonialeSituation = [{code : "M", display: "Married"}, {code : "D", display: "Divorced"},  {code : "A", display: "Annuled"},  {code : "U", display: "unmarried"},  {code : "S", display: "Never Married"}]
 let adressUse = ["home", "work"]
-let telecomUse = ["mobile"]
-let telecomSystem = ["phone"]
+let adressType = ["postal" , "physical", "both"]
+
+let telecomUse = ["home", "work", "temp", "old", "mobile"]
+let telecomSystem = ["phone", "fax", "email", "pager", "url", "sms", "other"]
 
 let nameUse = ["usual", "official", "temp", "nickname", "anonymous" ,"old",  "maiden"]
-let namePrefix = ["Mr", "Ms"]
+let namePrefix = ["Mr", "Mrs", "Miss", "Ms"]
 
 
 let patients = [] 
@@ -53,6 +55,7 @@ let backToPatientListButton = document.getElementById("backToPatientListButton")
 // Input fields 
 let genderDropdown = document.getElementById("genderDropdown")
 let adressTypeDropdown = document.getElementById("adressTypeDropdown")
+let adressUsageDropdown = document.getElementById("adressUsageDropdown")
 let telecomSystemDropdown = document.getElementById("telecomSystemDropdown")
 let telecomUsageDropdown = document.getElementById("telecomUsageDropdown")
 let nameUsageDropdown = document.getElementById("nameUsageDropdown")
@@ -73,12 +76,13 @@ let phoneNumberInputField = document.getElementById("inputFieldCreatePhoneNumber
 window.addEventListener("load", () => {
     fetchPatients()
     populateSelect(genderDropdown, genders)
-    populateSelect(adressTypeDropdown, adressUse)
+    populateSelect(adressTypeDropdown, adressType)
+    populateSelect(adressUsageDropdown, adressUse)
     populateSelect(telecomSystemDropdown, telecomSystem)
     populateSelect(telecomUsageDropdown, telecomUse)
     populateSelect(nameUsageDropdown, nameUse)
     populateSelect(denominationDropdown, namePrefix)
-    populateSelect(maritalStatusDropdown, matrimonialeSituation)
+    populateSelect(maritalStatusDropdown, matrimonialeSituation.map( matSituation =>  matSituation.display))
 })
 
 previousButton.addEventListener("click", () => {
@@ -158,9 +162,8 @@ function createPatient(){
     let name = nameInputField.value
     let firstName = firtsNameInputField.value
     let nameUse = nameUsageDropdown.value
-    let maritalStatus = maritalStatusDropdown.value
+    let maritalStatus =  matrimonialeSituation.find( x => x.display == maritalStatusDropdown.value) 
     let nameDenomination = denominationDropdown.value
-
     let birthdate = birthdatePicker.value
     let city = cityInputField.value
     let street = streetInputField.value
@@ -168,16 +171,20 @@ function createPatient(){
     let state = stateInputField.value
     let country = countryInputField.value
     let adressType = adressTypeDropdown.value
+    let adressUsage = adressUsageDropdown.value
     let gender = genderDropdown.value
     let numberPhone = phoneNumberInputField.value
     let telecomSystemType = telecomSystemDropdown.value
     let telecomUsage = telecomUsageDropdown.value
 
     let json = {
-        "resourceType" : "Patient",
-        "meta" : {},
-        "text" : {},
-        "identifier": [],
+        "resourceType":"Patient",
+        "meta":{"versionId":"1","lastUpdated":"2022-01-31T09:19:20.834+00:00"},
+        "text":{"status":"generated","div":"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Patient: Fhirman, Sam</p></div>"},
+        "identifier":[{"type":{"coding":[{"system":"http://hl7.org/fhir/v2/0203","code":"NI","display":"National unique individual identifier"}],
+        "text":"IHI"},"system":"http://ns.electronichealth.net.au/id/hi/ihi/1.0","value":"8003608166690503"},
+        {"use":"usual","type":{"coding":[{"system":"http://hl7.org/fhir/v2/0203","code":"MR"}]},
+        "system":"urn:oid:1.2.36.146.595.217.0.1","value":"6666","period":{"start":"2001-05-06"},"assigner":{"display":"Acme Healthcare"}}],
         "name": [
             {
                 "use": nameUse,
@@ -200,7 +207,9 @@ function createPatient(){
         "birthDate" : birthdate,
         "address" : [
             {
-                "use" : adressType,
+                "use" : adressUsage,
+                "type" : adressType,
+                
                 "line" : [
                     street
                 ],
@@ -210,26 +219,35 @@ function createPatient(){
                 "country" : country
             }
         ],
-        "maritalStatus" : {
-            "coding" : {
-                "system" : "",
-                "code" : "",
-                "display" : maritalStatus
-            }
-        }
+        "maritalStatus":{"coding":[{"system":"http://hl7.org/fhir/v3/MaritalStatus","code": maritalStatus.code,"display": maritalStatus.display}]}
+
     }
-
-
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            
+        if (this.readyState == 4 && this.status == 201) {
+            var parsedResult = JSON.parse(this.responseText)
+            resetCreatePatientForm()
+            alert("Le patient à été crée")
+
         }
     };    
-    xhttp.open("PUT", URL_PATIENT, true);
+    xhttp.open("POST", URL_PATIENT, true);
     xhttp.setRequestHeader("Accept","application/fhir+json")
     xhttp.setRequestHeader("Content-Type","application/fhir+json")
     xhttp.send(JSON.stringify(json));
+}
+
+
+
+function resetCreatePatientForm(){
+    nameInputField.value = ""
+    firtsNameInputField.value = ""
+    cityInputField.value = ""
+    streetInputField.value = ""
+    zipcodeInputField.value = ""
+    stateInputField.value = ""
+    countryInputField.value = ""
+    phoneNumberInputField.value = ""
 }
 
 
@@ -310,15 +328,12 @@ function updateUIList(){
         var tag = document.createElement("li");
 
         if(i == currentPatientSelected){
-            console.log("(active) i = " + i + " index = " + currentPatientSelected)
             tag.setAttribute("class","list-group-item active")
         }
         else{
-            console.log("(inactive) i = " + i + " index = " + currentPatientSelected)
             tag.setAttribute("class","list-group-item")
         }
 
-        console.log(patients[i])
         var text = document.createTextNode(patients[i].resource.name[0].family);
 
         tag.appendChild(text);

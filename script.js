@@ -1,3 +1,5 @@
+import { Patient } from "./model"
+
 const URL_PATIENT = "http://hapi.fhir.org/baseR4/Patient"
 const EMPTY_VALUE = ""
 const UPDATE_PATIENT_TITLE = "Mettre à jour le patient"
@@ -15,7 +17,7 @@ let nameUse = ["usual", "official", "temp", "nickname", "anonymous" ,"old",  "ma
 let namePrefix = ["Mr", "Mrs", "Miss", "Ms"]
 
 
-let patients = [] 
+let patientsobj = []
 let patientsIndexToDisplay = 0 
 let currentPatientSelected = 0
 
@@ -159,7 +161,7 @@ function deletePatient(){
     var url = URL_PATIENT+"/"+ getSelectedPatientId()
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 204) {
+        if (this.readyState == 4 && this.status == 200) {
            alert("Le patient N° + " + getSelectedPatientId() +  " a été supprimé")
         }
     };    
@@ -184,61 +186,27 @@ function displayUpdatePatientForm(){
     createPatientButton.style.display = 'none'
     savePatientButton.style.display = 'block'
 
-    let patientToUpdate = patients[currentPatientSelected].resource
+    let patientToUpdate = patientsobj[currentPatientSelected]
 
-    let nameToUpdate = patientToUpdate.name != undefined ?  patientToUpdate.name[0] : null
-    let birthDateToUpdate = patientToUpdate.birthDate != undefined ? patientToUpdate.birthDate : null
-    let addressToUpdate = patientToUpdate.address != undefined ? patientToUpdate.address[0] : null
-    let telecomToUpdate = patientToUpdate.telecom != undefined ? patientToUpdate.telecom[0] : null
-    let genderToUpdate = patientToUpdate.gender != undefined ? patientToUpdate.gender : ""
-    let maritalSituation = patientToUpdate.maritalStatus != undefined ?  patientToUpdate.maritalStatus.coding.display : ""
-
-    if(nameToUpdate != null){
-        nameInputField.value = nameToUpdate.family
-        let nameUse = nameToUpdate.use != undefined ? nameToUpdate.use : ""
-        let prefix = nameToUpdate.given[0]
-        nameUsageDropdown.value = nameUse
-        denominationDropdown.value = prefix
-    }
-    if(birthDateToUpdate){
-        birthdatePicker.value = birthDateToUpdate
-    }
-    if(addressToUpdate != null){
-        let cityToUpdate = addressToUpdate.city != undefined ?  addressToUpdate.city : ""
-        let streetToUpdate = addressToUpdate.line[0] != undefined ?  addressToUpdate.line[0] : ""
-        let zipcodeToUpdate = addressToUpdate.postalCode != undefined ?  addressToUpdate.postalCode : ""
-        let stateToUpdate = addressToUpdate.state != undefined ?  addressToUpdate.state : ""
-        let countryToUpdate = addressToUpdate.country != undefined ?  addressToUpdate.country : ""
-        let useToUpdate = addressToUpdate.use != undefined ? addressToUpdate.use : ""
-        let typeToUpdate = addressToUpdate.type != undefined ? addressToUpdate.type : ""
-
-        
-        cityInputField.value = cityToUpdate
-        streetInputField.value = streetToUpdate
-        zipcodeInputField.value = zipcodeToUpdate
-        stateInputField.value = stateToUpdate
-        countryInputField.value = countryToUpdate
-        adressUsageDropdown.value = useToUpdate
-        adressTypeDropdown.value = typeToUpdate
-        
-
-    }
-    if(telecomToUpdate != null){
-        let phoneNumber = telecomToUpdate.value != undefined ? telecomToUpdate.value : ""
-        let telecomSystemm = telecomToUpdate.system != undefined ? telecomToUpdate.system : ""
-        let telecomUse = telecomToUpdate.use != undefined ? telecomToUpdate.use : ""
-
-        phoneNumberInputField.value = phoneNumber
-        telecomSystemDropdown.value = telecomSystemm
-        telecomUsageDropdown.value = telecomUse
-    }
-
-    genderDropdown.value = genderToUpdate
-    maritalStatusDropdown.value = maritalSituation
+        nameInputField.value = patientToUpdate.getName()
+        nameUsageDropdown.value = patientToUpdate.getName()
+        denominationDropdown.value = patientToUpdate.getPrefix()
+        birthdatePicker.value = patientToUpdate.getNaissance()
+        cityInputField.value = patientToUpdate.getCity()
+        streetInputField.value = patientToUpdate.getStreet()
+        zipcodeInputField.value = patientToUpdate.getZipcode()
+        stateInputField.value = patientToUpdate.getState()
+        countryInputField.value = patientToUpdate.getCountry()
+        adressUsageDropdown.value = patientToUpdate.getAddressUse()
+        adressTypeDropdown.value = patientToUpdate.getAddressType()
+        phoneNumberInputField.value = patientToUpdate.getTelecomValue()
+        telecomSystemDropdown.value = patientToUpdate.getTelecomSystem()
+        telecomUsageDropdown.value = patientToUpdate.getTelecomValue()
+        genderDropdown.value = patientToUpdate.getGender()
+        maritalStatusDropdown.value = patientToUpdate.getSituationMatrimonaiel()
 }
 
 function updatePatient(){
-    console.log(patients[currentPatientSelected])
 
     let newName = nameInputField.value
     let newNameUsage = nameUsageDropdown.value
@@ -257,8 +225,6 @@ function updatePatient(){
     let newPhoneNumber = phoneNumberInputField.value
     let newTelecomSystem = telecomSystemDropdown.value
     let newTelecomUse = telecomUsageDropdown.value
-
-    let newPatient = patients[currentPatient].resource
 
     if(newPrefix != null){
         newPatient.name[0].prefix[0] = newPrefix
@@ -424,7 +390,11 @@ function resetCreatePatientForm(){
 function updatePatientsList(newPatients) {
     patientTitle.textContent = "Liste des patients (" + newPatients.length +")" 
     for(let i = 0 ; i < newPatients.length; i++){
-        patients.push(newPatients[i])
+        patientsobj.push(new Patient(newPatients[i].resource))
+    }
+   
+    for(let i = 0 ; i < patientsobj.length; i++){
+        console.log(patientsobj[i])
     }
     updateUIList()
     selectPatient(currentPatientSelected)
@@ -432,9 +402,10 @@ function updatePatientsList(newPatients) {
 
 
 function selectPatient(patientIndex){  
+
     currentPatientSelected = patientIndex
-    var currentPatient = patients[currentPatientSelected]
- console.log(currentPatient)
+    var currentPatient = patientsobj[currentPatientSelected]
+    console.log(currentPatient)
    
     var selectedPatient = document.getElementsByClassName("list-group-item active")
     selectedPatient[0].className = "list-group-item"
@@ -442,26 +413,19 @@ function selectPatient(patientIndex){
     var patientNotSelected = document.getElementsByClassName("list-group-item")
     patientNotSelected[currentPatientSelected%10].className = "list-group-item active"
 
-    patientName.textContent = "Nom : " + currentPatient.resource.name[0].family
-    patientBirthday.textContent = "Naissance : " + currentPatient.resource.birthDate
-    patientGender.textContent = "Genre : " + currentPatient.resource.gender
-
-    var maritalStatus = currentPatient.resource.maritalStatus != null ? currentPatient.resource.maritalStatus.coding[0].display : "inconnu"; 
-    patientMarried.textContent = "Situation matrimoniale : " + maritalStatus
-
-    let address = currentPatient.resource.address != null ? currentPatient.resource.address : null
-    if(address != null){
-        patientCity.textContent = "Ville : " + currentPatient.resource.address[0].city
-        patientStreet.textContent = "Rue : " + currentPatient.resource.address[0].line[0]
-        patientZipCode.textContent = "Code postal : " + currentPatient.resource.address[0].postalCode
-        patientState.textContent = "Etat : " + currentPatient.resource.address[0].state
-        patientCountry.textContent = "Pays : " + currentPatient.resource.address[0].country
-        patientAdress.textContent = "Type d'adresse : " + currentPatient.resource.address[0].use
-    
-        patientSystem.textContent = "Système : " + currentPatient.resource.telecom[0].system
-        patientValue.textContent = "Valeur : " + currentPatient.resource.telecom[0].value
-        patientUsage.textContent = "Usage : " + currentPatient.resource.telecom[0].use
-    }
+    patientName.textContent = "Nom : " + currentPatient.getName()
+    patientBirthday.textContent = "Naissance : " + currentPatient.getNaissance()
+    patientGender.textContent = "Genre : " + currentPatient.getGender()
+    patientMarried.textContent = "Situation matrimoniale : " + currentPatient.getSituationMatrimonaiel()
+    patientCity.textContent = "Ville : " + currentPatient.getCity()
+    patientStreet.textContent = "Rue : " + currentPatient.getStreet()
+    patientZipCode.textContent = "Code postal : " + currentPatient.getZipcode()
+    patientState.textContent = "Etat : " + currentPatient.getZipcode()
+    patientCountry.textContent = "Pays : " + currentPatient.getCountry()
+    patientAdress.textContent = "Type d'adresse : " + currentPatient.getAddressUse()
+    patientSystem.textContent = "Système : " + currentPatient.getTelecomSystem()
+    patientValue.textContent = "Valeur : " + currentPatient.getTelecomValue()
+     patientUsage.textContent = "Usage : " + currentPatient.getTelecomUsage()
 }
 
 
@@ -479,7 +443,6 @@ function resetPatientFields(){
     telecomSystemDropdown.value = null
     telecomUsageDropdown.value = null
 
-
     patientCity.textContent = "Ville : " + EMPTY_VALUE
     patientStreet.textContent = "Rue : " + EMPTY_VALUE
     patientZipCode.textContent = "Code postal : " + EMPTY_VALUE
@@ -493,11 +456,11 @@ function resetPatientFields(){
 }
 
 function getPatientsSize(){
-    return patients.length
+    return patientsobj.length
 }
 
 function getSelectedPatientId(){
-    return patients[currentPatientSelected].resource.id
+    return patientsobj[currentPatientSelected].id
 }
 
 function updateUIList(){
@@ -514,13 +477,15 @@ function updateUIList(){
             tag.setAttribute("class","list-group-item")
         }
 
-        var text = document.createTextNode(patients[i].resource.name[0].family);
-
-        tag.appendChild(text);
-        tag.addEventListener('click',() => {
-            selectPatient(i)
-        })
-        patientList.appendChild(tag)
+        
+            var text = document.createTextNode(patientsobj[i].getName());
+            tag.appendChild(text);
+            tag.addEventListener('click',() => {
+                selectPatient(i)
+            })
+            patientList.appendChild(tag)
+        
+      
     }
     selectPatient(currentPatientSelected)
 }
@@ -534,7 +499,7 @@ function onPreviousClicked(){
 }
 
 function onNextClicked(){
-    if(patientsIndexToDisplay +10 < patients.length)
+    if(patientsIndexToDisplay +10 < patientsobj.length)
     {
         patientsIndexToDisplay+=10;
         currentPatientSelected+=10;
@@ -546,3 +511,4 @@ function onUpdate(){
     inputPersonnalInformations.hidden = false;
     personnalInformations.hidden = true;
 }
+

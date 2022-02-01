@@ -1,21 +1,11 @@
 import { Patient } from "./model"
+import { genders, matrimonialeSituation, adressUse, adressType, telecomUse, telecomSystem, nameUse, namePrefix } from './const'
+import { fetchPatients, deletePatient, createPatient, updatePatient } from './rest'
 
-const URL_PATIENT = "http://hapi.fhir.org/baseR4/Patient"
+
 const EMPTY_VALUE = ""
 const UPDATE_PATIENT_TITLE = "Mettre à jour le patient"
 const CREATE_PATIENT_TITLE = "Créer le patient"
-
-
-// Patient form informations
-let genders = ["male", "female", "other", "unknown"]
-let matrimonialeSituation = [{code : "M", display: "Married"}, {code : "D", display: "Divorced"},  {code : "A", display: "Annuled"},  {code : "U", display: "unmarried"},  {code : "S", display: "Never Married"}]
-let adressUse = ["home", "work"]
-let adressType = ["postal" , "physical", "both"]
-let telecomUse = ["home", "work", "temp", "old", "mobile"]
-let telecomSystem = ["phone", "fax", "email", "pager", "url", "sms", "other"]
-let nameUse = ["usual", "official", "temp", "nickname", "anonymous" ,"old",  "maiden"]
-let namePrefix = ["Mr", "Mrs", "Miss", "Ms"]
-
 
 let patientsobj = []
 let patientsIndexToDisplay = 0 
@@ -80,7 +70,7 @@ let phoneNumberInputField = document.getElementById("inputFieldCreatePhoneNumber
 
 
 window.addEventListener("load", () => {
-    fetchPatients()
+    fetchPatients(updatePatientsList)
     populateSelect(genderDropdown, genders)
     populateSelect(adressTypeDropdown, adressType)
     populateSelect(adressUsageDropdown, adressUse)
@@ -99,7 +89,7 @@ nextButton.addEventListener("click", () => {
 })
 
 deleteButton.addEventListener("click", () => {
-    deletePatient()
+    deletePatient(getSelectedPatientId())
 })
 
 goToPatientFormButton.addEventListener("click", () => {
@@ -116,7 +106,7 @@ backToPatientListButton.addEventListener("click", () => {
 })
 
 createPatientButton.addEventListener("click", () => {
-    createPatient()
+    onCreatePatient()
 })
 
 updateButton.addEventListener("click", () => {
@@ -125,13 +115,12 @@ updateButton.addEventListener("click", () => {
 })
 
 savePatientButton.addEventListener("click", () => {
-    updatePatient()
+    onUpdatePatient()
 })
 
 // remplies un menu deroulant a partir d'une liste
 function populateSelect(selectedId, values){
-
-    for(i = 0 ; i < values.length ; i++){
+    for(let i = 0; i < values.length ; i++){
         let option = document.createElement("option")
         let text = document.createTextNode(values[i])
         option.appendChild(text)
@@ -140,161 +129,7 @@ function populateSelect(selectedId, values){
     }
 }
 
-// Recuperes tous les patients via l'API REST
-function fetchPatients() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var parsedResult = JSON.parse(this.responseText)
-            updatePatientsList(parsedResult.entry)
-        }
-    };    
-  xhttp.open("GET", URL_PATIENT, true);
-  xhttp.setRequestHeader("Accept","application/fhir+json")
-  xhttp.setRequestHeader("Content-Type","application/fhir+json")
-  xhttp.send();
-}
-
-// Supprime un patient
-function deletePatient(){
-
-    var url = URL_PATIENT+"/"+ getSelectedPatientId()
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-           alert("Le patient N° + " + getSelectedPatientId() +  " a été supprimé")
-        }
-    };    
-  xhttp.open("DELETE", url, true);
-  xhttp.setRequestHeader("Accept","application/fhir+json")
-  xhttp.setRequestHeader("Content-Type","application/fhir+json")
-  xhttp.send();
-}
-
-// UPDATE PATIENT
-function updatePatient(){
-    let newName = nameInputField.value
-
-}
-
-function displayUpdatePatientForm(){
-    resetPatientFields()
-    titlePatientForm.textContent = UPDATE_PATIENT_TITLE
-
-    patientListSection.style.display = 'none'
-    createPatientSection.style.display = 'block'
-    createPatientButton.style.display = 'none'
-    savePatientButton.style.display = 'block'
-
-    let patientToUpdate = patientsobj[currentPatientSelected]
-
-        nameInputField.value = patientToUpdate.getName()
-        nameUsageDropdown.value = patientToUpdate.getName()
-        denominationDropdown.value = patientToUpdate.getPrefix()
-        birthdatePicker.value = patientToUpdate.getNaissance()
-        cityInputField.value = patientToUpdate.getCity()
-        streetInputField.value = patientToUpdate.getStreet()
-        zipcodeInputField.value = patientToUpdate.getZipcode()
-        stateInputField.value = patientToUpdate.getState()
-        countryInputField.value = patientToUpdate.getCountry()
-        adressUsageDropdown.value = patientToUpdate.getAddressUse()
-        adressTypeDropdown.value = patientToUpdate.getAddressType()
-        phoneNumberInputField.value = patientToUpdate.getTelecomValue()
-        telecomSystemDropdown.value = patientToUpdate.getTelecomSystem()
-        telecomUsageDropdown.value = patientToUpdate.getTelecomValue()
-        genderDropdown.value = patientToUpdate.getGender()
-        maritalStatusDropdown.value = patientToUpdate.getSituationMatrimonaiel()
-}
-
-function updatePatient(){
-
-    let newName = nameInputField.value
-    let newNameUsage = nameUsageDropdown.value
-    let newMatrimonialSituation = maritalStatusDropdown.value
-    let newPrefix = denominationDropdown.value
-    let newBirthDate = birthDate.value
-    let newCity = cityInputField.value
-    let newStreet = streetInputField.value
-    let newZipcode = zipcodeInputField.value
-    let newState = stateInputField.value
-    let newCountry = countryInputField.value
-    let newAdressUse = adressUsageDropdown.value
-    let newAdressType = adressTypeDropdown.valu
-    let newGender = genderDropdown.value
-
-    let newPhoneNumber = phoneNumberInputField.value
-    let newTelecomSystem = telecomSystemDropdown.value
-    let newTelecomUse = telecomUsageDropdown.value
-
-    if(newPrefix != null){
-        newPatient.name[0].prefix[0] = newPrefix
-    }
-    if(newNameUsage != null){
-        newPatient.name[0].use = newNameUsage
-    }
-    if(newMatrimonialSituation != null){
-        newPatient.maritalStatus.coding[0].display = newMatrimonialSituation
-        newPatient.maritalStatus.coding[0].code =  matrimonialeSituation.find( x => x.display == newMatrimonialSituation) 
-    }
-
-    if(newCity != null){
-        newPatient.address[0].city = newCity
-    }
-    if(newStreet != null){
-        newPatient.address[0].line[0] = newStreet
-    }
-    if(newZipcode != null){
-        newPatient.address[0].postalCode = newZipcode
-    }
-    if(newState != null){
-        newPatient.address[0].state = newState
-    }
-    if(newCountry != null){
-        newPatient.address[0].country = newCountry
-    }
-    if(newAdressUse != null){
-        newPatient.address[0].use = newAdressUse
-    }
-    if(newAdressType != null){
-        newPatient.address[0].type = newAdressType
-    }
-
-    if(newName != ""){
-        newPatient.name[0].family = newName
-    }
-    if(newTelecomSystem != null){
-        newPatient.telecom[0].system = newTelecomSystem
-    }
-    if(newPhoneNumber != null){
-        newPatient.telecom[0].value = newPhoneNumber
-    }
-    if(newTelecomUse != null){
-        newPatient.telecom[0].use = newTelecomUse
-    }
-    if(newGender != ""){
-        newPatient.gender = newGender
-    }
-    if(newBirthDate != null){
-        newPatient.birthDate = newBirthDate
-    }
-
-
-    console.log(newPatient)
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert("Le patient à été mis à jour")
-        }
-    };    
-    xhttp.open("PUT", URL_PATIENT, true);
-    xhttp.setRequestHeader("Accept","application/fhir+json")
-    xhttp.setRequestHeader("Content-Type","application/fhir+json")
-    xhttp.send(JSON.stringify(newPatient));
-}
-
-function createPatient(){
-
+function onCreatePatient(){
     let name = nameInputField.value
     let firstName = firtsNameInputField.value
     let nameUse = nameUsageDropdown.value
@@ -313,64 +148,60 @@ function createPatient(){
     let telecomSystemType = telecomSystemDropdown.value
     let telecomUsage = telecomUsageDropdown.value
 
-    let json = {
-        "resourceType":"Patient",
-        "meta":{"versionId":"1","lastUpdated":"2022-01-31T09:19:20.834+00:00"},
-        "text":{"status":"generated","div":"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Patient: Fhirman, Sam</p></div>"},
-        "identifier":[{"type":{"coding":[{"system":"http://hl7.org/fhir/v2/0203","code":"NI","display":"National unique individual identifier"}],
-        "text":"IHI"},"system":"http://ns.electronichealth.net.au/id/hi/ihi/1.0","value":"8003608166690503"},
-        {"use":"usual","type":{"coding":[{"system":"http://hl7.org/fhir/v2/0203","code":"MR"}]},
-        "system":"urn:oid:1.2.36.146.595.217.0.1","value":"6666","period":{"start":"2001-05-06"},"assigner":{"display":"Acme Healthcare"}}],
-        "name": [
-            {
-                "use": nameUse,
-                "text": name + " " + firstName,
-                "family": name,
-                "given": [],
-                "prefix": [
-                    nameDenomination
-                ]
-            }
-        ],
-        "telecom" : [
-            {
-                "system" : telecomSystemType,
-                "value": numberPhone,
-                "use" : telecomUsage
-            }
-        ],
-        "gender" : gender,
-        "birthDate" : birthdate,
-        "address" : [
-            {
-                "use" : adressUsage,
-                "type" : adressType,
-                
-                "line" : [
-                    street
-                ],
-                "city": city,
-                "state" : state,
-                "postalCode" : zipCode,
-                "country" : country
-            }
-        ],
-        "maritalStatus":{"coding":[{"system":"http://hl7.org/fhir/v3/MaritalStatus","code": maritalStatus.code,"display": maritalStatus.display}]}
+    createPatient(name, firstName, nameUse, maritalStatus, nameDenomination, birthdate, city, street, zipCode, state, country, adressType, adressUsage, gender, numberPhone, telecomSystemType, telecomUsage, resetCreatePatientForm)
+}
 
-    }
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 201) {
-            var parsedResult = JSON.parse(this.responseText)
-            resetCreatePatientForm()
-            alert("Le patient à été crée")
+function displayUpdatePatientForm(){
+    resetPatientFields()
+    titlePatientForm.textContent = UPDATE_PATIENT_TITLE
 
-        }
-    };    
-    xhttp.open("POST", URL_PATIENT, true);
-    xhttp.setRequestHeader("Accept","application/fhir+json")
-    xhttp.setRequestHeader("Content-Type","application/fhir+json")
-    xhttp.send(JSON.stringify(json));
+    patientListSection.style.display = 'none'
+    createPatientSection.style.display = 'block'
+    createPatientButton.style.display = 'none'
+    savePatientButton.style.display = 'block'
+
+    let patientToUpdate = patientsobj[currentPatientSelected]
+
+    nameInputField.value = patientToUpdate.getName()
+    nameUsageDropdown.value = patientToUpdate.getName()
+    denominationDropdown.value = patientToUpdate.getPrefix()
+    birthdatePicker.value = patientToUpdate.getNaissance()
+    cityInputField.value = patientToUpdate.getCity()
+    streetInputField.value = patientToUpdate.getStreet()
+    zipcodeInputField.value = patientToUpdate.getZipcode()
+    stateInputField.value = patientToUpdate.getState()
+    countryInputField.value = patientToUpdate.getCountry()
+    adressUsageDropdown.value = patientToUpdate.getAddressUse()
+    adressTypeDropdown.value = patientToUpdate.getAddressType()
+    phoneNumberInputField.value = patientToUpdate.getTelecomValue()
+    telecomSystemDropdown.value = patientToUpdate.getTelecomSystem()
+    telecomUsageDropdown.value = patientToUpdate.getTelecomValue()
+    genderDropdown.value = patientToUpdate.getGender()
+    maritalStatusDropdown.value = patientToUpdate.getSituationMatrimonaiel()
+}
+
+function onUpdatePatient(){
+
+    let newName = nameInputField.value
+    let newNameUsage = nameUsageDropdown.value
+    let newMatrimonialSituation = maritalStatusDropdown.value
+    let newPrefix = denominationDropdown.value
+    let newBirthDate = birthdatePicker.value
+    let newCity = cityInputField.value
+    let newStreet = streetInputField.value
+    let newZipcode = zipcodeInputField.value
+    let newState = stateInputField.value
+    let newCountry = countryInputField.value
+    let newAdressUse = adressUsageDropdown.value
+    let newAdressType = adressTypeDropdown.valu
+    let newGender = genderDropdown.value
+    let newPhoneNumber = phoneNumberInputField.value
+    let newTelecomSystem = telecomSystemDropdown.value
+    let newTelecomUse = telecomUsageDropdown.value
+
+    let patientToUpdate = patientsobj[currentPatientSelected]
+
+   updatePatient(newName, newNameUsage, newMatrimonialSituation, newPrefix, newBirthDate, newCity, newStreet, newZipcode, newState, newCountry, newAdressUse, newAdressType, newGender, newPhoneNumber, newTelecomSystem, newTelecomUse, patientToUpdate)
 }
 
 
@@ -391,10 +222,6 @@ function updatePatientsList(newPatients) {
     patientTitle.textContent = "Liste des patients (" + newPatients.length +")" 
     for(let i = 0 ; i < newPatients.length; i++){
         patientsobj.push(new Patient(newPatients[i].resource))
-    }
-   
-    for(let i = 0 ; i < patientsobj.length; i++){
-        console.log(patientsobj[i])
     }
     updateUIList()
     selectPatient(currentPatientSelected)

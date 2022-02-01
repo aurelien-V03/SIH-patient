@@ -7,191 +7,196 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="./style.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">    </head>
     <body>
+        <div class="topnav">
+            <h2 id="mainTitle">Gestion des patients</h2>
+        </div>
 
         <!-- Formulaire de creation d'un patient  -->
         <div id="createPatientSection" style="display: none">
-            <h1 id="titlePatientForm">Creer un patient</h1>
-            <div class=card-header>
-            <div class="row align-items-start custom-liner">
-                <div class="col-sm-2">
-                    <h4>Nom</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateName" re>
-                </div>
-            </div>
-            <br>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Prenom</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateFirstName">
-                </div>
-            </div>
-            <br>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Nom d'usage</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="nameUsageDropdown">
-                    </select>
-                </div>
-            </div>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Situation</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="maritalStatusDropdown">
-                    </select>
-                </div>
-            </div>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Dénomination</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="denominationDropdown">
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Date de naissance</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="date" id="birthDatePicker">
-                </div>
-            </div>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Ville</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateCity">
-                </div>
-            </div>
-            <br>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Rue</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateStreet">
-                </div>
-            </div>
-            <br>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Code postal</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateZipcode">
-                </div>
-            </div>
-            <br>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Etat</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateState">
-                </div>
-            </div>
-            <br>
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Pays</h4>
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreateCountry">
-                </div>
-            </div>
-            <br>
-
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Usage de l'adresse</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="adressUsageDropdown">
-                    </select>
-                </div>
-            </div>
-
-            <div class="row align-items-start custom-line">
-              <div class="col-sm-2">
-                  <h4>Type d'adresse</h4>
-              </div>
-              <div class="col-sm-6">
-                  <select name="gender" id="adressTypeDropdown">
-                  </select>
-              </div>
-          </div>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Genre</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="genderDropdown">
-                    </select>
-                </div>
-            </div>
+            <h2 id="titlePatientForm">Creer un patient</h2>
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8">
+                    <div class=card-header>
+                        <div class="row align-items-start custom-liner">
+                            <div class="col-sm-4">
+                                <h3>Nom</h3>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateName" re>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Prenom</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateFirstName">
+                            </div>
+                        </div>
+                        <br>
             
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Numéro</h4>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Nom d'usage</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="nameUsageDropdown" class="form-select dropdown" >
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Situation</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="maritalStatusDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Dénomination</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="denominationDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+            
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Date de naissance</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="date" id="birthDatePicker" class="form-select datePicker">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Ville</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateCity">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Rue</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateStreet">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Code postal</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateZipcode">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Etat</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateState">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Pays</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreateCountry">
+                            </div>
+                        </div>
+                        <br>
+            
+            
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Usage de l'adresse</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="adressUsageDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                          <div class="col-sm-4">
+                              <h4>Type d'adresse</h4>
+                          </div>
+                          <div class="col-sm-8">
+                              <select name="gender" id="adressTypeDropdown" class="form-select dropdown">
+                              </select>
+                          </div>
+                      </div>
+                      <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Genre</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="genderDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Numéro</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputFieldCreatePhoneNumber">
+                            </div>
+                        </div>
+                        <br>
+            
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Système</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="telecomSystemDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-start custom-line">
+                            <div class="col-sm-4">
+                                <h4>Type d'usage</h4>
+                            </div>
+                            <div class="col-sm-8">
+                                <select name="gender" id="telecomUsageDropdown" class="form-select dropdown">
+                                </select>
+                            </div>
+                        </div>
+                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" id="inputFieldCreatePhoneNumber">
+                <div class="col-sm-2"></div>
+            </div>
+        
+            <div class="row justify-content-center">
+                <div class="col-sm-12 ">
+                    <button type="button" class="btn btn-success" id="backToPatientListButton">liste des patients</button>
+                    <button type="button" class="btn btn-success" id="createPatientButton">Créer le patient</button>
+                    <button type="button" class="btn btn-success" id="savePatientButton">Enregistrer le patient</button>
                 </div>
             </div>
-            <br>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Système</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="telecomSystemDropdown">
-                    </select>
-                </div>
-            </div>
-
-            <div class="row align-items-start custom-line">
-                <div class="col-sm-2">
-                    <h4>Type d'usage</h4>
-                </div>
-                <div class="col-sm-6">
-                    <select name="gender" id="telecomUsageDropdown">
-                    </select>
-                </div>
-            </div>
-        </div>
-
-           
-                <br>
-                <div class="centre">
-            <button type="button" class="btn btn-success" id="backToPatientListButton">liste des patients</button>
-           
-                 
-            <button type="button" class="btn btn-success" id="createPatientButton">Créer le patient</button>
-               
-            <button type="button" class="btn btn-success" id="savePatientButton">Enregistrer le patient</button>
-        </div>
-           
         </div>
         
     
@@ -200,18 +205,24 @@
 
         <!-- List des patients -->
         <div id="patientContent">
-            <p class="h2" id="patientTitle">Liste des patients</p>
-            <button type="button" class="btn btn-success" id="goToPatientFormButton">Créer un patient</button>
-            <br><br>
+
+            <div class="row justify-content-between">
+                <div class="col-sm-6">
+                    <p class="h2" id="patientTitle">Liste des patients</p>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-success" id="goToPatientFormButton">Créer un patient</button>
+                </div>
+            </div>
+
             <div class="card-header">
-            
             <br>
             <div class="row">
                 <div class="col-sm-2">
                     <ul class="list-group" id="patientList">
                     </ul>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                     <div class="card">
                         <div class="card-header">
                             <h6 class="text-center">Informations personnelles</h6>
@@ -235,7 +246,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="card">
                         <div class="card-header">
                             <h6 class="text-center">Adresse</h6>
@@ -253,7 +264,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <div class="card">
                         <div class="card-header">
                             <h6 class="text-center">Contact</h6>
@@ -270,31 +281,17 @@
                 </div>
             </div>
         </div>
+
             <div class="row justify-content-between">
-                
-                <div class="col text-center">
-                    <br> <br>
-                  
-                <div class="col-sm-2">
+                <div class="col-sm-6 bottomButton">
                     <button type="button" class="btn btn-primary " id="peviousButton">Precedent</button>
-                    <br> <br>
-                     <button type="button" class="btn btn-primary" id="nextButton">Suivant</button>
-                     <br> <br>
-                </div></div>
-                
-                <div>
-                    <br>
-                    <button type="button" class="btn btn-danger " id="deleteButton">Supprimer</button>
-                     <button type="button" class="btn btn-warning" id="updateButton">Modifier</button>
+                    <button type="button" class="btn btn-primary" id="nextButton">Suivant</button>
+                </div>
+                <div  class="col-sm-6 bottomButton">
+                    <button type="button" class="btn btn-danger" id="deleteButton">Supprimer</button>
+                    <button type="button" class="btn btn-warning" id="updateButton">Modifier</button>
                 </div>
             </div>
-
-            
-
-
-        </div>
-       
-
         <script type="text/javascript"  src="./script.js"></script>
     </body>
 </html>

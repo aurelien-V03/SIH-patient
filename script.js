@@ -1,4 +1,4 @@
-const URL_PATIENT = "http://test.fhir.org/r4/Patient"
+const URL_PATIENT = "http://hapi.fhir.org/baseR4/Patient"
 const EMPTY_VALUE = ""
 const UPDATE_PATIENT_TITLE = "Mettre à jour le patient"
 const CREATE_PATIENT_TITLE = "Créer le patient"

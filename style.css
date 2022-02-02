@@ -51,3 +51,11 @@ h4{
     background-color: #333;
     overflow: hidden;
   }
+
+  .cardFitContent{
+      height: 100%;
+  }
+
+  .informationLine{
+      margin-top: 5px;
+  }

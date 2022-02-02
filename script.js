@@ -201,7 +201,7 @@ function onUpdatePatient(){
 
     let patientToUpdate = patientsobj[currentPatientSelected]
 
-   updatePatient(newName, newNameUsage, newMatrimonialSituation, newPrefix, newBirthDate, newCity, newStreet, newZipcode, newState, newCountry, newAdressUse, newAdressType, newGender, newPhoneNumber, newTelecomSystem, newTelecomUse, patientToUpdate)
+   updatePatient(getSelectedPatientId(), newName, newNameUsage, newMatrimonialSituation, newPrefix, newBirthDate, newCity, newStreet, newZipcode, newState, newCountry, newAdressUse, newAdressType, newGender, newPhoneNumber, newTelecomSystem, newTelecomUse, patientToUpdate)
 }
 
 

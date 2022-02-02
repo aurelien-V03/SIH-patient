@@ -1,13 +1,19 @@
 
 export class Patient {
     
+    resourceType = "Patient"
+    meta = {}
+    text = {}
+    identifier = {}
     birthDate = null
     gender = null
     id = null
     name = []
     address = []
     telecom = []
-    maritalStatus = null
+    maritalStatus = {
+        "coding" : []
+    }
 
     constructor(json){
         if(json.gender != undefined){
@@ -16,12 +22,22 @@ export class Patient {
         if(json.birthDate != undefined){
             this.birthDate = json.birthDate
         }
+        if(json.meta != undefined){
+            this.meta = json.meta
+        }
         if(json.id != undefined){
             this.id = json.id
         }
         if(json.name != undefined){
             this.name = json.name
         }
+        if(json.text != undefined){
+            this.text = json.text
+        }
+        if(json.identifier != undefined){
+            this.identifier = json.identifier
+        }
+
         if(json.address != undefined){
             this.address = json.address
         }
@@ -78,12 +94,14 @@ export class Patient {
     }
 
     getSituationMatrimonaiel(){
-        if(this.maritalStatus != null){
-            return this.maritalStatus.coding.display
+        if(this.maritalStatus != undefined){
+            if(this.maritalStatus.coding != undefined && this.maritalStatus.coding.length > 0){
+                if(this.maritalStatus.coding[0].display != undefined){
+                    return this.maritalStatus.coding[0].display
+                }
+            }
         }
-        else{
-            return ""
-        }
+        return ""
     }
 
     getCity(){
@@ -214,5 +232,44 @@ export class Patient {
         else{
             return ""
         }
+    }
+
+    setNewName(newName, newFirstName, newNameUse, newPrefix){
+      
+            this.name[0] = {
+                "use": newNameUse,
+                "text": newName + " " + newFirstName,
+                "family": newName,
+                "given": [],
+                "prefix": [
+                    newPrefix
+                ]
+            }
+        
+    }
+
+    setNewTelecom(newTelecomSystem, newNumberPhone, newTelecomUsage){
+        this.telecom[0] =
+        {
+            "system" : newTelecomSystem,
+            "value": newNumberPhone,
+            "use" : newTelecomUsage
+        }
+    }
+
+
+    setNewGender(newGender){
+        this.gender = newGender
+    }
+
+    setNewBirthDate(newBirthdate){
+        this.birthDate = newBirthdate
+    }   
+
+    setNewMaritalStatus(newMaritalStatusDisplay, newMartialStatusCode){
+        this.maritalStatus.coding[0] = {
+        "system":"http://hl7.org/fhir/v3/MaritalStatus",
+        "code": newMartialStatusCode,
+        "display": newMaritalStatusDisplay}
     }
 }

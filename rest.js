@@ -1,3 +1,5 @@
+import { matrimonialeSituation } from './const'
+
 const URL_PATIENT = "http://hapi.fhir.org/baseR4/Patient"
 
 
@@ -33,14 +35,26 @@ export function deletePatient(patientId){
   xhttp.send();
 }
 
-export function updatePatient(newName, newNameUsage, newMatSituation, newPrefix, newBirthDate, newCity, newStreet, newZipCode, newState, newCountry, newAdressUse, newAdressType, newGender, newPhoneNumber, newTelecomSsystem, newTelecomUse, patientToUpdate){
+export function updatePatient(patientId, newName, newNameUsage, newMatSituation, newPrefix, newBirthDate, newCity, newStreet, newZipCode, newState, newCountry, newAdressUse, newAdressType, newGender, newPhoneNumber, newTelecomSsystem, newTelecomUse, patientToUpdate){
+    
+    patientToUpdate.setNewName(newName, "", newNameUsage, newPrefix)
+    patientToUpdate.setNewTelecom(newTelecomSsystem, newPhoneNumber, newTelecomUse)
+    patientToUpdate.setNewGender(newGender)
+    patientToUpdate.setNewBirthDate(newBirthDate)
+    let newMaritalStatus =  matrimonialeSituation.find( x => x.display == newMatSituation) 
+
+    patientToUpdate.setNewMaritalStatus(newMatSituation, newMaritalStatus)
+    
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             alert("Le patient à été mis à jour")
+            var parsedResult = JSON.parse(this.responseText)
+            console.log(parsedResult)
+
         }
     };    
-    xhttp.open("PUT", URL_PATIENT, true);
+    xhttp.open("PUT", URL_PATIENT + "/" + patientId, true);
     xhttp.setRequestHeader("Accept","application/fhir+json")
     xhttp.setRequestHeader("Content-Type","application/fhir+json")
     xhttp.send(JSON.stringify(patientToUpdate));

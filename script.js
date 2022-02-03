@@ -240,21 +240,29 @@ function selectPatient(patientIndex){
     var patientNotSelected = document.getElementsByClassName("list-group-item")
     patientNotSelected[currentPatientSelected%10].className = "list-group-item active"
 
-    patientName.textContent = "Nom : " + currentPatient.getName()
-    patientBirthday.textContent = "Naissance : " + currentPatient.getNaissance()
-    patientGender.textContent = "Genre : " + currentPatient.getGender()
-    patientMarried.textContent = "Situation matrimoniale : " + currentPatient.getSituationMatrimonaiel()
-    patientCity.textContent = "Ville : " + currentPatient.getCity()
-    patientStreet.textContent = "Rue : " + currentPatient.getStreet()
-    patientZipCode.textContent = "Code postal : " + currentPatient.getZipcode()
-    patientState.textContent = "Etat : " + currentPatient.getZipcode()
-    patientCountry.textContent = "Pays : " + currentPatient.getCountry()
-    patientAdress.textContent = "Type d'adresse : " + currentPatient.getAddressUse()
-    patientSystem.textContent = "Système : " + currentPatient.getTelecomSystem()
-    patientValue.textContent = "Valeur : " + currentPatient.getTelecomValue()
-     patientUsage.textContent = "Usage : " + currentPatient.getTelecomUsage()
+    patientName.textContent = "Nom : " + stringValueOrEmpty(currentPatient.getName())
+    patientBirthday.textContent = "Naissance : " + stringValueOrEmpty(currentPatient.getNaissance())
+    patientGender.textContent = "Genre : " + stringValueOrEmpty(currentPatient.getGender())
+    patientMarried.textContent = "Situation matrimoniale : " + stringValueOrEmpty(currentPatient.getSituationMatrimonaiel())
+    patientCity.textContent = "Ville : " + stringValueOrEmpty(currentPatient.getCity())
+    patientStreet.textContent = "Rue : " + stringValueOrEmpty(currentPatient.getStreet())
+    patientZipCode.textContent = "Code postal : " + stringValueOrEmpty(currentPatient.getZipcode())
+    patientState.textContent = "Etat : " + stringValueOrEmpty(currentPatient.getZipcode())
+    patientCountry.textContent = "Pays : " + stringValueOrEmpty(currentPatient.getCountry())
+    patientAdress.textContent = "Type d'adresse : " + stringValueOrEmpty(currentPatient.getAddressUse())
+    patientSystem.textContent = "Système : " + stringValueOrEmpty(currentPatient.getTelecomSystem())
+    patientValue.textContent = "Valeur : " + stringValueOrEmpty(currentPatient.getTelecomValue())
+     patientUsage.textContent = "Usage : " + stringValueOrEmpty(currentPatient.getTelecomUsage())
 }
 
+
+function stringValueOrEmpty(value){
+    if(value.length > 0){
+        return value
+    }
+    else 
+        return "Inconnu"
+}
 
 function resetPatientFields(){
     patientName.textContent = "Nom : " + EMPTY_VALUE
@@ -305,7 +313,7 @@ function updateUIList(){
         }
 
         
-            var text = document.createTextNode(patientsobj[i].getName());
+            var text = document.createTextNode(patientsobj[i].getName().length > 0 ? patientsobj[i].getName() : "Nom inconnu" );
             tag.appendChild(text);
             tag.addEventListener('click',() => {
                 selectPatient(i)

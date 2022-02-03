@@ -1,4 +1,5 @@
 import { matrimonialeSituation } from './const'
+import { Patient } from './model';
 
 const URL_PATIENT = "http://hapi.fhir.org/baseR4/Patient"
 
@@ -48,10 +49,7 @@ export function updatePatient(patientId, newName, newNameUsage, newMatSituation,
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            alert("Le patient à été mis à jour")
-            var parsedResult = JSON.parse(this.responseText)
-            console.log(parsedResult)
-
+            alert("Le patient N° " + patientId  + "à été mis à jour")
         }
     };    
     xhttp.open("PUT", URL_PATIENT + "/" + patientId, true);
@@ -116,8 +114,24 @@ export function createPatient(name, firstName, nameUse, maritalStatus,
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 201) {
             var parsedResult = JSON.parse(this.responseText)
+            let patient = new Patient(parsedResult)
             resetCreatePatientForm()
-            alert("Le patient à été crée")
+            alert("Le patient à été crée avec les informations suivantes : "
+            + "\nNom : " + patient.getName()    
+            + "\nNaissance : " + patient.getNaissance()
+            + "\nGenre : " + patient.getGender()
+            + "\nSituation : " + patient.getSituationMatrimonaiel()
+            + "\nVille : " + patient.getCity()
+            + "\nRue :" + patient.getStreet()
+            + "\nCode postal : " + patient.getZipcode()
+            + "\nEtat : " + patient.getState()
+            + "\nPays : " + patient.getCountry()
+            + "\nType adresse : " + patient.getAddressType()
+            + "\nUsage adresse : " + patient.getAddressUse()
+            + "\nNumero : " + patient.getTelecomValue()
+            + "\nTelecom type : " + patient.getTelecomSystem()
+            + "\nTelecom usage : " + patient.getTelecomUsage()
+            )
 
         }
     };    

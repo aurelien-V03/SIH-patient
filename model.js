@@ -235,7 +235,6 @@ export class Patient {
     }
 
     setNewName(newName, newFirstName, newNameUse, newPrefix){
-      
             this.name[0] = {
                 "use": newNameUse,
                 "text": newName + " " + newFirstName,

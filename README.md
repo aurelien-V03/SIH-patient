@@ -7,4 +7,6 @@
 ```
 git clone https://github.com/aurelien-V03/SIH-patient.git
 ```
+#### Vous pouvez aussi télécharger le proejt sous format ZIP : https://drive.google.com/file/d/1KzskmsppD_mCAxTXcGWzASvIpvQsza0_/view?usp=sharing
+
 ###  3 - lancer le site
